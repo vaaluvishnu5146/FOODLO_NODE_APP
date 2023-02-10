@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const ProductSchema = require("../models/test");
+const { calculatedPriceAfterDiscount } = require("../utils/pricing");
 
 ////////////////////////////////////////////////////////
 ///// GET ALL PRODUCTS - GET
@@ -78,10 +79,25 @@ router.get("/:id", (req, res, next) => {
   const { id = "" } = req.params;
   ProductSchema.findById(id)
     .then((response) => {
+      const data = { ...response._doc };
+      // try {
+      //   calculatedPriceAfterDiscount(
+      //     response.price,
+      //     response.discount,
+      //     response.discountType
+      //   );
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      data.discountPrice = calculatedPriceAfterDiscount(
+        response.price,
+        response.discount,
+        response.discountType
+      );
       if (response._id) {
         res.status(200).json({
           message: "Products fetched successfully",
-          data: response,
+          data: data,
         });
       } else {
         res.status(200).json({
