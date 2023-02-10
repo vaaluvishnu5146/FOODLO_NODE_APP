@@ -33,7 +33,6 @@ router.get("/", (req, res, next) => {
 /////////////////////////////////////////////////////////
 
 router.post("/", (req, res, next) => {
-  console.log(req.body);
   const {
     name = "",
     imageUrl = "",
@@ -56,7 +55,6 @@ router.post("/", (req, res, next) => {
   Product.save()
     .then((response) => {
       if (response) {
-        console.log(response);
         res.status(200).json({
           message: "Successfull",
           data: response,
@@ -65,7 +63,8 @@ router.post("/", (req, res, next) => {
     })
     .catch((err) =>
       res.status(400).json({
-        message: "Failed",
+        success: false,
+        message: err.message,
         error: err,
       })
     );
